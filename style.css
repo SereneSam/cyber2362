@@ -10,7 +10,9 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: wheat;
+    /* background: wheat; */
+    background: url('images/bluewallpaper.jpg') no-repeat;
+    background-size: cover;
 }
 
 .wrapper {
@@ -65,7 +67,7 @@ body {
     width: 165px;
     height: 40px;
     color: black;
-    background: wheat;
+    background: #f1ebe0;
     border: none;
     border-radius: 40px;
     outline: none;
