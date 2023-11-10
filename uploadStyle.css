@@ -1,0 +1,32 @@
+/* upload button */
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    outline: none;
+}
+
+body {
+    height: 100vh;
+    display: grid;
+    place-content: center;
+    font-family: 'Cambria';
+    background-color: #BE9685;
+}
+
+input[type="file"] {
+    display: none;
+}
+
+label {
+    display: inline-block;
+    text-transform: capitalize;
+    color: black;
+    background: #85ADBE;
+    text-align: center;
+    padding: 15px 30px;
+    font-size: 18px;
+    user-select: none;
+    border-radius: 10px;
+    border: darkgray;
+}

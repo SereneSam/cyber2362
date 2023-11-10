@@ -1,3 +1,4 @@
+/* login page */
 * {
     margin: 10;
     padding: 10;
@@ -10,16 +11,18 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    /* background: wheat; */
-    background: url('images/bluewallpaper.jpg') no-repeat;
-    background-size: cover;
+    background: #BE9685
+        /* background: #85ADBE; */
+        /* background: url('images/wallpaper.avif') no-repeat; */
+        /* background-size: cover; */
 }
 
 .wrapper {
     width: 550px;
     height: 440px;
     border-radius: 15px;
-    background: #BE9685;
+    /* background: #BE9685; */
+    background: #85ADBE;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -51,7 +54,7 @@ body {
 }
 
 .input-box input::placeholder {
-    color: grey;
+    color: dimgray;
     font-style: italic;
 }
 
