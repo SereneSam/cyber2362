@@ -28,7 +28,7 @@ app.post("/login", (req, res) => {
 
   // LDAP authentication logic
   const client = ldap.createClient({
-    url: "ldap://172.18.160.1:10389",
+    url: "ldap://localhost:10389",
   });
 
   client.bind(`cn=${username},ou=users,ou=system`, password, (err) => {
