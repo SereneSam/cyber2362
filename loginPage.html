@@ -1,42 +1,50 @@
 <!DOCTYPE html>
 <html>
-
-<head>
-    <meta charset="UTF-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=chrome">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
 
     <title>Cyber Management System</title>
-    <link rel="stylesheet" href="style.css">
-    <link href='https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css' rel='stylesheet'>
-</head>
+    <link rel="stylesheet" type="text/css" href="style.css" />
+    <link
+      href="https://unpkg.com/boxicons@2.1.4/css/boxicons.min.css"
+      rel="stylesheet"
+    />
+  </head>
 
-<body>
+  <body>
     <div class="wrapper">
-        <form id="loginForm" onsubmit="authenticate(event)">
-            <h1>Welcome!</h1>
-
-            <!--Username here-->
-            <div class="input-box">
-                <div class="input-icon">
-                    <i class='bx bx-user'></i>
-                </div>
-                <input type="text" id="username" placeholder="Username" required>
-            </div>
-
-            <!--Password here-->
-            <div class="input-box">
-                <div class="input-icon">
-                    <i class='bx bxs-key'></i>
-                </div>
-                <input type="password" id="password" placeholder="Password" required>
-            </div>
-
-            <!--Login Button here-->
-            <button type="submit" class="Button">Login</button>
-        </form>
+      <form action="/login" method="post">
+        <h1>Welcome!</h1>
+        <div class="input-box">
+          <div class="input-icon">
+            <i class="bx bx-user"></i>
+          </div>
+          <input
+            type="text"
+            id="username"
+            placeholder="Username"
+            name="username"
+            required
+          />
+          <br />
+        </div>
+        <div class="input-box">
+          <div class="input-icon">
+            <i class="bx bxs-key"></i>
+          </div>
+          <input
+            type="password"
+            id="password"
+            placeholder="Password"
+            name="password"
+            required
+          />
+          <br />
+        </div>
+        <button type="submit">Login</button>
+      </form>
     </div>
-    <script src="auth.js"></script>
-</body>
-
+  </body>
 </html>
