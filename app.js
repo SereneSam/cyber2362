@@ -33,7 +33,9 @@ app.post("/login", (req, res) => {
 
   client.bind(`cn=${username},ou=users,ou=system`, password, (err) => {
     if (err) {
-      res.send("Login failed. Check your username and password.");
+      res.sendFile(path.join(__dirname + "/loginPage.html"), {
+        error: "Login failed. Check your username and password.",
+      });
     } else {
       res.redirect("/filesPage");
     }
