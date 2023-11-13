@@ -4,6 +4,7 @@ const bodyParser = require("body-parser");
 const path = require("path");
 const app = express();
 const port = 3000;
+const fileManager = require('./fileManagementSystem');
 
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
@@ -34,7 +35,7 @@ app.post("/login", (req, res) => {
   client.bind(`cn=${username},ou=users,ou=system`, password, (err) => {
     if (err) {
       res.sendFile(path.join(__dirname + "/loginPage.html"), {
-        error: "Login failed. Check your username and password.",
+        error: "Login failed. Check your useeeeeeername and password.",
       });
     } else {
       res.redirect("/filesPage");
@@ -46,4 +47,27 @@ app.post("/login", (req, res) => {
 
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
+});
+
+// 
+app.post('/fileAction', (req, res) => {
+  const action = req.body.action;
+  const fileName = req.body.fileName;
+  const content = req.body.content;
+
+  switch (action.toLowerCase()) {
+    case 'add':
+      fileManager.addFile(fileName, content || '');
+      break;
+    case 'delete':
+      fileManager.deleteFile(fileName);
+      break;
+    case 'list':
+      fileManager.listFiles();
+      break;
+    default:
+      console.log('Invalid action. Use "add", "delete", or "list".');
+  }
+
+  res.redirect('/filesPage');
 });
