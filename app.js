@@ -6,6 +6,7 @@ const app = express();
 const port = 3000;
 const fileManager = require('./fileManagementSystem');
 
+
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
@@ -19,8 +20,9 @@ app.get("/filesPage", (req, res) => {
 });
 
 app.get("/loginPage", (req, res) => {
-  res.sendFile(path.join(__dirname + "/loginPage.html"));
-});
+ 
+res.sendFile(path.join(__dirname + "/loginPage.html"));
+})
 
 // Handle login form submission
 app.post("/login", (req, res) => {
@@ -34,13 +36,11 @@ app.post("/login", (req, res) => {
 
   client.bind(`cn=${username},ou=users,ou=system`, password, (err) => {
     if (err) {
-      res.sendFile(path.join(__dirname + "/loginPage.html"), {
-        error: "Login failed. Check your useeeeeeername and password.",
-      });
-    } else {
-      res.redirect("/filesPage");
+      // Send the error message in the URL query parameters
+      return res.redirect("/loginPage?error=Login%20failed.%20Check%20your%20username%20and%20password.");
     }
-
+    // If authentication is successful, continue with other logic or redirect
+    res.redirect("/filesPage");
     client.unbind();
   });
 });

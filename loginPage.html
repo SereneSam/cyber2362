@@ -13,8 +13,10 @@
 
 <body>
     <div class="wrapper">
+        <div id="error-message" class="error-message"></div>
         <form action="/login" method="post">
             <h1>Welcome!</h1>
+            
             <div class="input-box">
                 <div class="input-icon">
                     <i class="bx bx-user"></i>
@@ -29,19 +31,25 @@
                 <input type="password" id="password" placeholder="Password" name="password" required />
                 <br />
             </div>
+            
             <button type="submit">Login</button>
         </form>
     </div>
+    
 </body>
 
 </html>
 
 <script>
-    // Check if there is an error message from the server
-    const errorMessage = "Login failed. Check youhhhhhr username and password.";
+    const errorMessageElement = document.getElementById("error-message");
 
-    // Display the error message if it exists
-    if (errorMessage) {
-        alert(errorMessage); // You can replace this with your preferred way of displaying the message
-    }
+// Check if there is an error message from the server
+const urlParams = new URLSearchParams(window.location.search);
+const errorMessage = urlParams.get("error");
+
+// Display the error message if it exists
+if (errorMessage) {
+    errorMessageElement.innerText = errorMessage;
+}
+    
 </script>
