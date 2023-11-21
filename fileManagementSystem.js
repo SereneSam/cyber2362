@@ -1,13 +1,18 @@
 const fs = require('fs');
+const path = require('path');
+
+const uploadPath = path.join(__dirname, 'uploaded_files');
 
 const addFile = (fileName, content) => {
-    fs.writeFileSync(fileName, content);
+    const filePath = path.join(uploadPath, fileName);
+    fs.writeFileSync(filePath, content);
     console.log(`File "${fileName}" created successfully.`);
 };
 
 const deleteFile = (fileName) => {
-    if (fs.existsSync(fileName)) {
-        fs.unlinkSync(fileName);
+    const filePath = path.join(uploadPath, fileName);
+    if (fs.existsSync(filePath)) {
+        fs.unlinkSync(filePath);
         console.log(`File "${fileName}" deleted successfully.`);
     } else {
         console.log(`File "${fileName}" not found.`);
@@ -15,7 +20,7 @@ const deleteFile = (fileName) => {
 };
 
 const listFiles = () => {
-    const files = fs.readdirSync(__dirname);
+    const files = fs.readdirSync(uploadPath);
     console.log('List of files:');
     files.forEach(file => console.log(file));
 };

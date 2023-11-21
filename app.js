@@ -1,12 +1,13 @@
 const express = require("express");
 const ldap = require("ldapjs");
 const bodyParser = require("body-parser");
+const fileUpload = require("express-fileupload");
 const path = require("path");
 const app = express();
 const port = 3000;
 const fileManager = require('./fileManagementSystem');
 
-
+app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
 
@@ -50,6 +51,25 @@ app.post("/login", (req, res) => {
     client.unbind();
   });
 });
+
+app.post('/uploadFile', (req, res) => {
+  const uploadedFile = req.files.file;
+
+  if (!uploadedFile) {
+    return res.status(400).send('No file uploaded.');
+  }
+
+  const uploadPath = path.join(__dirname, 'uploaded_files', uploadedFile.name);
+
+  uploadedFile.mv(uploadPath, (err) => {
+    if (err) {
+      return res.status(500).send(err);
+    }
+
+    res.send('File uploaded successfully!');
+  });
+});
+
 app.listen(port, () => {
   console.log(`Server is running on http://localhost:${port}`);
 });
