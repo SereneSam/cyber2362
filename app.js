@@ -6,10 +6,15 @@ const path = require("path");
 const app = express();
 const port = 3000;
 const fileManager = require('./fileManagementSystem');
+const https = require('https');
+const fs = require('fs');
 
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
+app.use('/', (req, res, next) => {
+  res.send('Hello from SSL server')
+})
 
 // Serve HTML login page
 app.get("/", (req, res) => {
@@ -96,3 +101,14 @@ app.post('/fileAction', (req, res) => {
 
   res.redirect('/filesPage');
 });
+
+// for https protocol
+const sslServer = https.createServer(
+  {
+    key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
+    cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem'))
+  },
+  app
+)
+
+sslServer.listen(3443, () => console.log("Secure server on port 3443"))

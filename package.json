@@ -2,7 +2,12 @@
   "name": "cyber2362",
   "dependencies": {
     "express": "^4.18.2",
+    "express-fileupload": "^1.4.3",
     "ldapjs": "^3.0.6",
+    "nodemailer": "^6.9.7",
     "prompt": "^1.3.0"
+  },
+  "scripts": {
+    "start": "node app.js"
   }
 }
