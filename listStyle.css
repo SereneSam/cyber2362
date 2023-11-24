@@ -1,0 +1,14 @@
+/* Additional styles for checkbox and delete button */
+.file-item {
+  display: flex;
+  align-items: center;
+  margin-bottom: 10px;
+}
+
+.file-checkbox {
+  margin-right: 10px;
+}
+
+#deleteSelectedBtn {
+  margin-top: 10px;
+}

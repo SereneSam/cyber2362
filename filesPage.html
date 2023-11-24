@@ -14,8 +14,19 @@
 
   <body>
     <!-- Document Upload Here -->
-    <input type="file" id="UploadButton" />
-    <label for="UploadButton">Add File</label>
+    <form action="/filesPage" method="post" enctype="multipart/form-data">
+      <input type="file" id="UploadButton" name="file" />
+      <label for="UploadButton">Add File</label>
+      <button type="submit">Upload File</button>
+    </form>
+
+    <!-- Button to go to File Explorer -->
+    <button id="fileExplorerButton" onclick="showFileExplorer()">Go to File Explorer</button>
+    <script src="fileExplorer.js"></script>
+
+    <!-- Confirm Delete Button here-->
+    <button id="deleteButton" onclick="confirmFileDeletion('example-file.txt')">Delete</button>
+    <script src="confirmationDialog.js"></script>
 
     <!--Logout Button here-->
     <button onclick="logout()" class="Button">Logout</button>

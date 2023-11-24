@@ -28,6 +28,14 @@ app.get('/loginPage', (req, res) => {
   res.sendFile(path.join(__dirname + '/loginPage.html'));
 });
 
+// Serve HTML file explorer page
+app.get("/fileExplorer", (req, res) => {
+  const uploadPath = path.join(__dirname, 'uploaded_files');
+  const files = fs.readdirSync(uploadPath);
+
+  res.render('fileExplorer', { files });
+});
+
 // Handle login form submission
 app.post('/login', (req, res) => {
   const username = req.body.username;
@@ -53,7 +61,7 @@ app.post('/login', (req, res) => {
   });
 });
 
-app.post('/uploadFile', (req, res) => {
+app.post('/filesPage', (req, res) => {
   const uploadedFile = req.files.file;
 
   if (!uploadedFile) {
@@ -67,7 +75,14 @@ app.post('/uploadFile', (req, res) => {
       return res.status(500).send(err);
     }
 
-    res.send('File uploaded successfully!');
+    const successMessage = `${uploadedFile.name} uploaded successfully :)`;
+
+    return res.send(`
+        <script>
+            alert("${successMessage}");
+            window.location.href = "/filesPage";
+        </script>
+    `);
   });
 });
 
