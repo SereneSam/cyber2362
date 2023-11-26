@@ -11,6 +11,8 @@ const portHTTP = 3000;
 const portHTTPS = 3443;
 const fileManager = require('./fileManagementSystem');
 
+const logout = require('./logout');
+
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
 app.use(express.static(path.join(__dirname)));
@@ -36,8 +38,10 @@ app.get("/fileExplorer", (req, res) => {
   res.render('fileExplorer', { files });
 });
 
+
+
 // Handle login form submission
-app.post('/login', (req, res) => {
+app.post('/login', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
@@ -46,20 +50,45 @@ app.post('/login', (req, res) => {
     url: 'ldap://localhost:10389',
   });
 
-  client.bind(`cn=${username},ou=users,ou=system`, password, (err) => {
-    if (err) {
-      return res.send(`
-            <script>
-                alert("Login failed. Check your username and password.");
-                window.location.href = "/loginPage";
-            </script>
-        `);
-    }
-    // If authentication is successful, continue with other logic or redirect
+  try {
+    // Admin login
+    await bindClient(client, `uid=${username},ou=system`, password);
+
+    // Admin login successful
     res.redirect('/filesPage');
-    client.unbind();
-  });
+    client.unbind(); // Ensure unbind is called
+  } catch (adminErr) {
+    try {
+      // Regular user login if admin login fails
+      await bindClient(client, `cn=${username},ou=users,ou=system`, password);
+
+      // Regular user login successful
+      res.redirect('/filesPage');
+      client.unbind(); // Ensure unbind is called
+    } catch (userErr) {
+      // Both admin and regular user logins failed
+      console.error('Login Error:', userErr.message);
+      res.send(`
+        <script>
+          alert("Login failed! Please check your username and password.");
+          window.location.href = "/loginPage";
+        </script>
+      `);
+    }
+  }
 });
+
+function bindClient(client, dn, password) {
+  return new Promise((resolve, reject) => {
+    client.bind(dn, password, (err) => {
+      if (err) {
+        reject(err);
+      } else {
+        resolve();
+      }
+    });
+  });
+}
 
 app.post('/filesPage', (req, res) => {
   const uploadedFile = req.files.file;
