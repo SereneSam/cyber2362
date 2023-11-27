@@ -21,8 +21,7 @@ const deleteFile = (fileName) => {
 
 const listFiles = () => {
     const files = fs.readdirSync(uploadPath);
-    console.log('List of files:');
-    files.forEach(file => console.log(file));
+    return files;
 };
 
 module.exports = {

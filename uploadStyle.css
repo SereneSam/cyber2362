@@ -14,19 +14,39 @@ body {
     background-color: #BE9685;
 }
 
-input[type="file"] {
-    display: none;
+/* File Explorer styles */
+#goToUploadButton {
+    margin-bottom: 20px;
+    background-color: #85ADBE;
+    color: black;
+    padding: 10px;
+    font-size: 16px;
+    border-radius: 5px;
+    cursor: pointer;
 }
 
-label {
-    display: inline-block;
-    text-transform: capitalize;
+#fileList {
+    list-style-type: none;
+    padding: 0;
+}
+
+#fileList button {
+    margin-bottom: 10px;
+    background-color: #85ADBE;
     color: black;
-    background: #85ADBE;
-    text-align: center;
-    padding: 15px 30px;
-    font-size: 18px;
-    user-select: none;
-    border-radius: 10px;
-    border: darkgray;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#fileList li {
+    display: flex;
+    align-items: center;
+    margin-bottom: 10px;
+}
+
+#fileList input[type="checkbox"] {
+    margin-right: 10px;
 }

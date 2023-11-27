@@ -32,13 +32,9 @@ app.get('/loginPage', (req, res) => {
 
 // Serve HTML file explorer page
 app.get("/fileExplorer", (req, res) => {
-  const uploadPath = path.join(__dirname, 'uploaded_files');
-  const files = fs.readdirSync(uploadPath);
-
-  res.render('fileExplorer', { files });
+  const files = fileManager.listFiles();
+  res.json(files);
 });
-
-
 
 // Handle login form submission
 app.post('/login', async (req, res) => {
@@ -94,14 +90,27 @@ app.post('/filesPage', (req, res) => {
   const uploadedFile = req.files.file;
 
   if (!uploadedFile) {
-    return res.status(400).send('No file uploaded.');
+    const missingMessage = `No file to commit :(`;
+    return res.send(`
+        <script>
+            alert("${missingMessage}");
+            window.location.href = "/filesPage";
+        </script>
+    `);
   }
 
   const uploadPath = path.join(__dirname, 'uploaded_files', uploadedFile.name);
 
   uploadedFile.mv(uploadPath, (err) => {
     if (err) {
-      return res.status(500).send(err);
+      const failureMessage = `${uploadedFile.name} upload failed :(`;
+
+      return res.send(`
+        <script>
+            alert("${failureMessage}");
+            window.location.href = "/filesPage";
+        </script>
+    `);
     }
 
     const successMessage = `${uploadedFile.name} uploaded successfully :)`;
