@@ -11,7 +11,7 @@ body {
     justify-content: center;
     align-items: center;
     min-height: 100vh;
-    background: #2f3233
+    background: #022C43
         /* background: #85ADBE; */
         /* background: url('images/wallpaper.avif') no-repeat; */
         /* background-size: cover; */
@@ -22,7 +22,7 @@ body {
     height: 440px;
     border-radius: 15px;
     /* background: #BE9685; */
-    background: #85ADBE;
+    background: #FFD700;
     display: flex;
     justify-content: center;
     align-items: center;
@@ -46,10 +46,10 @@ body {
     background: transparent;
     border: none;
     outline: none;
-    border: 2px solid rgba(255, 255, 255, 0.2);
+    border: 2px solid #022C43;
     border-radius: 40px;
     font-size: 16px;
-    color: #000;
+    color: #053F5E;
     padding: 20px 45px 20px 20px;
 }
 
@@ -69,8 +69,8 @@ body {
 .wrapper button {
     width: 165px;
     height: 40px;
-    color: black;
-    background: #f1ebe0;
+    color: #FFD700;
+    background: #053F5E;
     border: none;
     border-radius: 40px;
     outline: none;
