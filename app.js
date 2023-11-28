@@ -149,24 +149,24 @@ app.post('/fileAction', (req, res) => {
 // Redirect to HTTPS if not secure
 app.use((req, res, next) => {
   if (!req.secure) {
-    return res.redirect(`https://${req.headers.host}${req.url}`);
+    return res.redirect(`https://${req.headers.host.replace(/:[0-9]+/, '')}:${portHTTPS}${req.url}`);
   }
   next();
 });
 
 // Redirect to HTTP
-app.use((req, res, next) => {
-  if (req.secure) {
-    return res.redirect(`http://${req.headers.host}${req.url}`);
-  }
-  next();
-});
+// app.use((req, res, next) => {
+//   if (req.secure) {
+//     return res.redirect(`http://${req.headers.host}${req.url}`);
+//   }
+//   next();
+// });
 
 
 // Create HTTPS server
 const sslOptions = {
-  key: fs.readFileSync(path.join(__dirname, 'cert', 'key.pem')),
-  cert: fs.readFileSync(path.join(__dirname, 'cert', 'cert.pem')),
+  key: fs.readFileSync(path.join(__dirname, 'cert', 'server.key')),
+  cert: fs.readFileSync(path.join(__dirname, 'cert', 'server.crt')),
 };
 
 const sslServer = https.createServer(sslOptions, app);
