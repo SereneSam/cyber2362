@@ -31,7 +31,21 @@ app.get('/loginPage', (req, res) => {
 
 // Serve HTML file explorer page
 app.get("/fileExplorer", (req, res) => {
-  // list files here or filesPage
+  res.sendFile(path.join(__dirname + '/fileExplorer.html'));
+});
+
+// List of files for easy access
+app.get('/fileList', (req, res) => {
+  const directoryPath = path.join(__dirname, 'uploaded_files');
+
+  try {
+      // Read the files in the directory synchronously
+      const files = fs.readdirSync(directoryPath);
+      res.json(files);
+  } catch (err) {
+      console.error('Error reading files:', err);
+      res.status(500).json({ error: 'Internal Server Error' });
+  }
 });
 
 // Express route for handling LDAP authentication
