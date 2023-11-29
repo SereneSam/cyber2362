@@ -61,7 +61,7 @@ app.post('/login', (req, res) => {
   // LDAP bind to authenticate the user
   client.bind(`cn=${username}`, password, (err) => {
     if (err) {
-      console.error('Login Error:', userErr.message);
+      console.error('Login Error:', err);
       res.send(`
         <script>
           alert("Login failed! Please check your username and password.");
