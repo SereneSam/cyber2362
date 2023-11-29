@@ -6,6 +6,13 @@ const path = require('path');
 const https = require('https');
 const fs = require('fs');
 
+  // LDAP authentication logic
+  console.log('LDAP Client is being made');
+const client = ldap.createClient({
+  url: ['ldap://127.0.0.1:13089', 'ldap://127.0.0.2:13089']
+});
+console.log('LDAP Client had been made');
+
 const app = express();
 const portHTTP = 3000;
 const portHTTPS = 3443;
@@ -41,10 +48,9 @@ app.post('/login', async (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  // LDAP authentication logic
-  const client = ldap.createClient({
-    url: 'ldap://localhost:10389',
-  });
+client.on('connectError', (err) => {
+  // handle connection error
+})
 
   try {
     // Admin login
@@ -73,6 +79,7 @@ app.post('/login', async (req, res) => {
     }
   }
 });
+
 
 function bindClient(client, dn, password) {
   return new Promise((resolve, reject) => {
@@ -169,13 +176,14 @@ const sslOptions = {
   cert: fs.readFileSync(path.join(__dirname, 'cert', 'server.crt')),
 };
 
+
 const sslServer = https.createServer(sslOptions, app);
 
 // Start both HTTP and HTTPS servers
 app.listen(portHTTP, () => {
-  console.log(`HTTP Server is running on http://localhost:${portHTTP}`);
+  console.log(`HTTP Server is running on http://127.0.0.1:${portHTTP}`);
 });
 
 sslServer.listen(portHTTPS, () => {
-  console.log(`HTTPS Server is running on https://localhost:${portHTTPS}`);
+  console.log(`HTTPS Server is running on https://127.0.0.1:${portHTTPS}`);
 });

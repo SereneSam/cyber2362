@@ -195,6 +195,6 @@ server.search(SUFFIX, authorize, (req, res, next) => {
 
 ///--- Fire it up
 
-server.listen(10389, () => {
-  console.log('LDAP at server up at: %s', server.url);
-});
+server.listen(13089, '127.0.0.1', function() {
+   console.log('LDAP server listening at: ' + server.url);
+ });
