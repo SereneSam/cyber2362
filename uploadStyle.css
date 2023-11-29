@@ -1,5 +1,4 @@
-/* upload button */
-* {
+upload button * {
     margin: 0;
     padding: 0;
     box-sizing: border-box;
@@ -11,19 +10,19 @@ body {
     display: grid;
     place-content: center;
     font-family: 'Cambria';
-    background-color: #BE9685;
+    background-color: #022C43;
 }
 
 /* File Explorer styles */
-#goToUploadButton {
+/* #goToUploadButton {
     margin-bottom: 20px;
-    background-color: #85ADBE;
+    background-color: #FFD700;
     color: black;
     padding: 10px;
     font-size: 16px;
     border-radius: 5px;
     cursor: pointer;
-}
+} */
 
 #fileList {
     list-style-type: none;
@@ -32,13 +31,20 @@ body {
 
 #fileList button {
     margin-bottom: 10px;
-    background-color: #85ADBE;
-    color: black;
+    background-color: #FFD700;
+    color: #053F5E;
     padding: 10px;
     font-size: 16px;
     border: none;
     border-radius: 5px;
     cursor: pointer;
+    align-items: center;
+}
+
+#fileList:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
 }
 
 #fileList li {
@@ -49,4 +55,75 @@ body {
 
 #fileList input[type="checkbox"] {
     margin-right: 10px;
+}
+
+/* Go to File Explorer button */
+#fileExplorerButton {
+    margin-bottom: 20px;
+    background-color: #FFD700;
+    color: #053F5E;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#fileExplorerButton:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+}
+
+/* Upload button */
+#UploadButton {
+    margin-bottom: 20px;
+    background-color: #FFD700;
+    color: #053F5E;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#UploadButton:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+}
+
+/* Confirm Delete button */
+#deleteButton {
+    margin-bottom: 20px;
+    background-color: #FFD700;
+    color: #053F5E;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#deleteButton:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+}
+
+/* Logout button */
+.Button {
+    background-color: #FFD700;
+    color: #053F5E;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+.Button:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
 }
