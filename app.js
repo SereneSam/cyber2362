@@ -9,7 +9,6 @@ const fs = require('fs');
 const app = express();
 const portHTTP = 3000;
 const portHTTPS = 3443;
-const fileManager = require('./fileManagementSystem');
 
 const logout = require('./logout');
 
@@ -32,8 +31,7 @@ app.get('/loginPage', (req, res) => {
 
 // Serve HTML file explorer page
 app.get("/fileExplorer", (req, res) => {
-  const files = fileManager.listFiles();
-  res.json(files);
+  // either list files here or filesPage
 });
 
 // Handle login form submission
@@ -121,28 +119,6 @@ app.post('/filesPage', (req, res) => {
         </script>
     `);
   });
-});
-
-app.post('/fileAction', (req, res) => {
-  const action = req.body.action;
-  const fileName = req.body.fileName;
-  const content = req.body.content;
-
-  switch (action.toLowerCase()) {
-    case 'add':
-      fileManager.addFile(fileName, content || '');
-      break;
-    case 'delete':
-      fileManager.deleteFile(fileName);
-      break;
-    case 'list':
-      fileManager.listFiles();
-      break;
-    default:
-      console.log('Invalid action. Use "add", "delete", or "list".');
-  }
-
-  res.redirect('/filesPage');
 });
 
 // Redirect to HTTPS if not secure
