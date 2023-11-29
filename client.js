@@ -115,6 +115,24 @@ app.post('/filesPage', (req, res) => {
   });
 });
 
+app.post('/deleteFiles', (req, res) => {
+  const filesToDelete = req.body.files;
+
+  try {
+    const directoryPath = path.join(__dirname, 'uploaded_files');
+
+    filesToDelete.forEach(file => {
+      const filePath = path.join(directoryPath, file);
+      fs.unlinkSync(filePath);
+    });
+
+    res.json({ message: 'Files deleted successfully' });
+  } catch (err) {
+    console.error('Error deleting files:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
+  }
+});
+
 // Redirect to HTTPS if not secure
 app.use((req, res, next) => {
   if (!req.secure) {

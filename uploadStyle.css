@@ -51,6 +51,7 @@ body {
     display: flex;
     align-items: center;
     margin-bottom: 10px;
+    color: #FFD700;
 }
 
 #fileList input[type="checkbox"] {
@@ -123,6 +124,24 @@ body {
 }
 
 .Button:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+}
+
+/* goToFilesPage button */
+#goToFilesPageButton {
+    margin-bottom: 20px;
+    background-color: #FFD700;
+    color: #053F5E;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#goToFilesPage:hover {
     background-color: #053F5E;
     border: 2px solid #FFD700;
     color: #FFD700;
