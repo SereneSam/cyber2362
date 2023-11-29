@@ -5,7 +5,7 @@ const fileUpload = require('express-fileupload');
 const path = require('path');
 const https = require('https');
 const fs = require('fs');
-
+const port = 13089;
 const app = express();
 const portHTTP = 3000;
 const portHTTPS = 3443;
@@ -36,32 +36,19 @@ app.get("/fileExplorer", (req, res) => {
   res.json(files);
 });
 
-// Handle login form submission
-app.post('/login', async (req, res) => {
+// Express route for handling LDAP authentication
+app.post('/login', (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-client.on('connectError', (err) => {
-  // handle connection error
-})
+  // LDAP connection setup
+  const client = ldap.createClient({
+  url: ['ldap://127.0.0.1:13089', 'ldap://127.0.0.2:13089']
+});
 
-  try {
-    // Admin login
-    await bindClient(client, `uid=${username},ou=system`, password);
-
-    // Admin login successful
-    res.redirect('/filesPage');
-    client.unbind(); // Ensure unbind is called
-  } catch (adminErr) {
-    try {
-      // Regular user login if admin login fails
-      await bindClient(client, `cn=${username},ou=users,ou=system`, password);
-
-      // Regular user login successful
-      res.redirect('/filesPage');
-      client.unbind(); // Ensure unbind is called
-    } catch (userErr) {
-      // Both admin and regular user logins failed
+  // LDAP bind to authenticate the user
+  client.bind(`cn=${username}`, password, (err) => {
+    if (err) {
       console.error('Login Error:', userErr.message);
       res.send(`
         <script>
@@ -69,21 +56,14 @@ client.on('connectError', (err) => {
           window.location.href = "/loginPage";
         </script>
       `);
+    } else {
+      res.redirect('/filesPage');
     }
-  }
-});
 
-function bindClient(client, dn, password) {
-  return new Promise((resolve, reject) => {
-    client.bind(dn, password, (err) => {
-      if (err) {
-        reject(err);
-      } else {
-        resolve();
-      }
-    });
+    // Close the LDAP connection
+    client.unbind();
   });
-}
+});
 
 app.post('/filesPage', (req, res) => {
   const uploadedFile = req.files.file;
@@ -178,4 +158,9 @@ app.listen(portHTTP, () => {
 
 sslServer.listen(portHTTPS, () => {
   console.log(`HTTPS Server is running on https://127.0.0.1:${portHTTPS}`);
+});
+
+// Start the Express server
+app.listen(port, () => {
+  console.log(`Server listening at http://localhost:${port}`);
 });
