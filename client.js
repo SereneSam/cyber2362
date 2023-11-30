@@ -5,11 +5,12 @@ const fileUpload = require("express-fileupload");
 const path = require("path");
 const https = require("https");
 const fs = require("fs");
-const { log } = require("console");
 const port = 13089;
 const app = express();
 const portHTTP = 3000;
 const portHTTPS = 3443;
+
+const logout = require("./logout");
 
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -46,15 +47,16 @@ app.get("/fileList", (req, res) => {
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
-// LDAP connection setup
-const client = ldap.createClient({
-  url: ["ldap://127.0.0.1:13089", "ldap://127.0.0.2:13089"],
-});
 
 // Express route for handling LDAP authentication
 app.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+
+  // LDAP connection setup
+  const client = ldap.createClient({
+    url: ["ldap://127.0.0.1:13089", "ldap://127.0.0.2:13089"],
+  });
 
   // LDAP bind to authenticate the user
   client.bind(`cn=${username}`, password, (err) => {
@@ -66,16 +68,18 @@ app.post("/login", (req, res) => {
           window.location.href = "/loginPage";
         </script>
       `);
-    } else if (username == "admin") {
-      res.redirect("/filesPage");
     } else {
       res.redirect("/filesPage");
     }
+
+    // Close the LDAP connection
+    client.unbind();
   });
 });
 
 app.post("/filesPage", (req, res) => {
-  const uploadedFile = req.files.file;
+  const uploadedFile = req.files && req.files.file; // req.files && added
+
   if (!uploadedFile) {
     const missingMessage = `No file to commit :(`;
     return res.send(`
@@ -111,8 +115,17 @@ app.post("/filesPage", (req, res) => {
   });
 });
 
-app.post("/deleteFiles", (req, res) => {
+app.use(express.json());
+app.post("/deleteFile/", (req, res) => {
   const filesToDelete = req.body.files;
+
+  console.log("Entire request body:", req.body);
+  console.log("Files to delete:", filesToDelete);
+
+  if (!filesToDelete || !Array.isArray(filesToDelete)) {
+    console.error("Invalid or missing files to delete.");
+    return res.status(400).json({ error: "Bad Request" });
+  }
 
   try {
     const directoryPath = path.join(__dirname, "uploaded_files");

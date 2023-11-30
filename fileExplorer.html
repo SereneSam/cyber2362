@@ -1,7 +1,6 @@
 <!DOCTYPE html>
 <html lang="en">
-
-<head>
+  <head>
     <meta charset="UTF-8" />
     <meta http-equiv="X-UA-Compatible" content="IE=chrome" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
@@ -9,14 +8,16 @@
     <title>Cyber Management System - File Explorer</title>
 
     <link rel="stylesheet" href="uploadStyle.css" />
-</head>
+  </head>
 
-<body>
+  <body>
     <!-- Confirm Delete Button here -->
     <!-- <button id="deleteButton" onclick="confirmFileDeletion('example-file.txt')">Delete Selected Files</button>
     <script src="confirmationDialog.js"></script> -->
 
-    <button id="deleteButton" onclick="deleteCheckedFiles()">Delete Selected Files</button>
+    <button id="deleteButton" onclick="deleteCheckedFiles()">
+      Delete Selected Files
+    </button>
     <!-- <script src="confirmationDialog.js"></script> -->
 
     <!-- Confirm Delete Button here-->
@@ -28,12 +29,11 @@
 
     <!-- List of files with checkboxes -->
     <ul id="fileList">
-        <!-- File list will be dynamically added here -->
+      <!-- File list will be dynamically added here -->
     </ul>
 
     <!-- Button to go back to Upload Page -->
     <button id="goToFilesPageButton" onclick="goToFilesPage()">Go Back</button>
     <script src="fileExplorer.js"></script>
-</body>
-
+  </body>
 </html>
