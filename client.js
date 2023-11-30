@@ -1,5 +1,7 @@
 const express = require("express");
 const ldap = require("ldapjs");
+const winston = require("winston");
+const session = require("express-session");
 const bodyParser = require("body-parser");
 const fileUpload = require("express-fileupload");
 const path = require("path");
@@ -9,8 +11,28 @@ const port = 13089;
 const app = express();
 const portHTTP = 3000;
 const portHTTPS = 3443;
-const archiver = require('archiver');
-const logout = require("./logout");
+const archiver = require("archiver");
+const { log } = require("console");
+
+const logger = winston.createLogger({
+  transports: [new winston.transports.File({ filename: "log.txt" })],
+});
+
+const authenticate = (req, res, next) => {
+  if (req.session.isAuthenticated) {
+    next(); // User is authenticated, continue to the next middleware
+  } else {
+    res.redirect("/loginPage"); // Redirect to the login page if not authenticated
+  }
+};
+
+app.use(
+  session({
+    secret: "12345",
+    resave: true,
+    saveUninitialized: true,
+  })
+);
 
 app.use(fileUpload());
 app.use(bodyParser.urlencoded({ extended: true }));
@@ -30,11 +52,11 @@ app.get("/loginPage", (req, res) => {
 });
 
 // Serve HTML file explorer page
-app.get("/fileExplorer", (req, res) => {
+app.get("/fileExplorer", authenticate, (req, res) => {
   res.sendFile(path.join(__dirname + "/fileExplorer.html"));
 });
 
-app.get("/fileExplorerUser", (req, res) => {
+app.get("/fileExplorerUser", authenticate, (req, res) => {
   res.sendFile(path.join(__dirname + "/fileExplorerUser.html"));
 });
 
@@ -57,7 +79,7 @@ app.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
 
-  // LDAP connection setup
+  //LDAP connection setup
   const client = ldap.createClient({
     url: ["ldap://127.0.0.1:13089", "ldap://127.0.0.2:13089"],
   });
@@ -65,7 +87,8 @@ app.post("/login", (req, res) => {
   // LDAP bind to authenticate the user
   client.bind(`cn=${username}`, password, (err) => {
     if (err) {
-      console.error("Login Error:", err);
+      const errorMessage = `Authentication failed for user ${username}: ${err.message}`;
+      logger.error(errorMessage);
       res.send(`
         <script>
           alert("Login failed! Please check your username and password.");
@@ -73,8 +96,16 @@ app.post("/login", (req, res) => {
         </script>
       `);
     } else if (username == "admin") {
+      console.log(`${username} authenticated successfully`);
+      logger.info(`${username} authenticated successfully`);
+      req.session.isAuthenticated = true;
+      req.session.username = username;
       res.redirect("/filesPage");
     } else {
+      console.log(`${username} authenticated successfully`);
+      logger.info(`${username} authenticated successfully`);
+      req.session.isAuthenticated = true;
+      req.session.username = username;
       res.redirect("/fileExplorerUser");
     }
 
@@ -83,10 +114,12 @@ app.post("/login", (req, res) => {
   });
 });
 
-app.post("/filesPage", (req, res) => {
+app.post("/filesPage", authenticate, (req, res) => {
   const uploadedFile = req.files && req.files.file; // req.files && added
 
   if (!uploadedFile) {
+    console.log(`No files were committed.`);
+    logger.info(`No files were committed.`);
     const missingMessage = `No file to commit :(`;
     return res.send(`
         <script>
@@ -101,6 +134,8 @@ app.post("/filesPage", (req, res) => {
   uploadedFile.mv(uploadPath, (err) => {
     if (err) {
       const failureMessage = `${uploadedFile.name} upload failed :(`;
+      console.log(`${uploadedFile.name} upload failed.`);
+      logger.info(`${uploadedFile.name} upload failed.`);
 
       return res.send(`
         <script>
@@ -111,6 +146,7 @@ app.post("/filesPage", (req, res) => {
     }
 
     const successMessage = `${uploadedFile.name} uploaded successfully :)`;
+    console.log(`${uploadedFile.name} uploaded successfully.`);
 
     return res.send(`
         <script>
@@ -127,9 +163,12 @@ app.post("/deleteFile/", (req, res) => {
 
   console.log("Entire request body:", req.body);
   console.log("Files to delete:", filesToDelete);
+  logger.info("Entire request body:", req.body);
+  logger.info("Files to delete:", filesToDelete);
 
   if (!filesToDelete || !Array.isArray(filesToDelete)) {
     console.error("Invalid or missing files to delete.");
+    logger.error(`${filesToDelete} is/are invalid or missing file(s).`);
     return res.status(400).json({ error: "Bad Request" });
   }
 
@@ -144,35 +183,42 @@ app.post("/deleteFile/", (req, res) => {
     res.json({ message: "Files deleted successfully" });
   } catch (err) {
     console.error("Error deleting files:", err);
+    logger.error("Error deleting files:", err);
     res.status(500).json({ error: "Internal Server Error" });
   }
 });
 
 // downloadFiles here
-app.post('/downloadFiles', (req, res) => {
+app.post("/downloadFiles", (req, res) => {
   const filesToDownload = req.body.files;
 
-  console.log('Files to download:', filesToDownload);
+  console.log("Files to download:", filesToDownload);
+  logger.info("Files to download:", filesToDownload);
 
   if (!filesToDownload || filesToDownload.length === 0) {
-    return res.status(400).json({ error: 'Invalid or missing files to download.' });
+    return res
+      .status(400)
+      .json({ error: "Invalid or missing files to download." });
   }
 
   // Create a zip archive
-  const archive = archiver('zip', {
+  const archive = archiver("zip", {
     zlib: { level: 9 }, // Sets the compression level
   });
 
   // Set the response headers
-  res.setHeader('Content-Type', 'application/zip');
-  res.setHeader('Content-Disposition', 'attachment; filename=downloaded_files.zip');
+  res.setHeader("Content-Type", "application/zip");
+  res.setHeader(
+    "Content-Disposition",
+    "attachment; filename=downloaded_files.zip"
+  );
 
   // Pipe the archive to the response stream
   archive.pipe(res);
 
   // Add files to the archive
   filesToDownload.forEach((file) => {
-    const filePath = path.join(__dirname, 'uploaded_files', file);
+    const filePath = path.join(__dirname, "uploaded_files", file);
 
     // Check if the file exists before adding it to the archive
     if (fs.existsSync(filePath)) {
@@ -184,11 +230,26 @@ app.post('/downloadFiles', (req, res) => {
   archive.finalize();
 });
 
+app.post("/logout", (req, res) => {
+  const username = req.session.username;
+
+  if (username) {
+    console.log(`${username} has logged out.`);
+    logger.info(`${username} has logged out.`);
+    req.session.isAuthenticated = false;
+    req.session.username = null;
+    res.redirect("/loginPage");
+  } else {
+    res.send("User not logged in");
+  }
+});
+
 // Redirect to HTTPS if not secure
 app.use((req, res, next) => {
   if (!req.secure) {
     return res.redirect(
-      `https://${req.headers.host.replace(/:[0-9]+/, "")}:${portHTTPS}${req.url
+      `https://${req.headers.host.replace(/:[0-9]+/, "")}:${portHTTPS}${
+        req.url
       }`
     );
   }

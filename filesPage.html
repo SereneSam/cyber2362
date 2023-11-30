@@ -20,10 +20,15 @@
     </form>
 
     <!-- Button to go to File Explorer -->
-    <button id="fileExplorerButton" onclick="showFileExplorer()">Go to File Explorer</button>
+    <button id="fileExplorerButton" onclick="showFileExplorer()">
+      Go to File Explorer
+    </button>
 
     <!--Logout Button here-->
-    <button onclick="logout()" class="Button">Logout</button>
-    <script src="logout.js"></script>
+    <form action="/logout" method="post">
+      <button id="goToFilesPageButton">Logout</button>
+    </form>
+    <script src="fileExplorer.js"></script>
+    <script src="client.js"></script>
   </body>
 </html>

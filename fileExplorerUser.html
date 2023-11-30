@@ -22,7 +22,10 @@
     </ul>
 
     <!-- Button to go back to Upload Page -->
-    <button id="goToFilesPageButton" onclick="goToLoginPage()">Logout</button>
+    <form action="/logout" method="post">
+      <button id="goToFilesPageButton">Logout</button>
+    </form>
     <script src="fileExplorer.js"></script>
+    <script src="client.js"></script>
   </body>
 </html>
