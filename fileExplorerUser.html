@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=chrome" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+    <title>Cyber Management System - File Explorer</title>
+
+    <link rel="stylesheet" href="uploadStyle.css" />
+  </head>
+
+  <body>
+    <!-- Download Button here -->
+    <button id="downloadButton" onclick="downloadCheckedFiles()">
+      Download Selected Files
+    </button>
+
+    <!-- List of files with checkboxes -->
+    <ul id=" fileList">
+      <!-- File list will be dynamically added here -->
+    </ul>
+
+    <!-- Button to go back to Upload Page -->
+    <button id="goToFilesPageButton" onclick="goToLoginPage()">Logout</button>
+    <script src="fileExplorer.js"></script>
+  </body>
+</html>

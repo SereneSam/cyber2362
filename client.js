@@ -34,6 +34,10 @@ app.get("/fileExplorer", (req, res) => {
   res.sendFile(path.join(__dirname + "/fileExplorer.html"));
 });
 
+app.get("/fileExplorerUser", (req, res) => {
+  res.sendFile(path.join(__dirname + "/fileExplorerUser.html"));
+});
+
 // List of files for easy access
 app.get("/fileList", (req, res) => {
   const directoryPath = path.join(__dirname, "uploaded_files");
@@ -68,8 +72,10 @@ app.post("/login", (req, res) => {
           window.location.href = "/loginPage";
         </script>
       `);
-    } else {
+    } else if (username == "admin") {
       res.redirect("/filesPage");
+    } else {
+      res.redirect("/fileExplorerUser");
     }
 
     // Close the LDAP connection

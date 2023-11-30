@@ -85,6 +85,10 @@ function goToFilesPage() {
     window.location.href = "/filesPage";
 }
 
+function goToLoginPage() {
+  window.location.href = "/loginPage";
+}
+
 // fileExplorer.js
 function downloadFile(filename) {
     // Trigger a download for a single file
