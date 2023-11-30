@@ -9,7 +9,7 @@ const port = 13089;
 const app = express();
 const portHTTP = 3000;
 const portHTTPS = 3443;
-
+const archiver = require('archiver');
 const logout = require("./logout");
 
 app.use(fileUpload());
@@ -142,12 +142,47 @@ app.post("/deleteFile/", (req, res) => {
   }
 });
 
+// downloadFiles here
+app.post('/downloadFiles', (req, res) => {
+  const filesToDownload = req.body.files;
+
+  console.log('Files to download:', filesToDownload);
+
+  if (!filesToDownload || filesToDownload.length === 0) {
+    return res.status(400).json({ error: 'Invalid or missing files to download.' });
+  }
+
+  // Create a zip archive
+  const archive = archiver('zip', {
+    zlib: { level: 9 }, // Sets the compression level
+  });
+
+  // Set the response headers
+  res.setHeader('Content-Type', 'application/zip');
+  res.setHeader('Content-Disposition', 'attachment; filename=downloaded_files.zip');
+
+  // Pipe the archive to the response stream
+  archive.pipe(res);
+
+  // Add files to the archive
+  filesToDownload.forEach((file) => {
+    const filePath = path.join(__dirname, 'uploaded_files', file);
+
+    // Check if the file exists before adding it to the archive
+    if (fs.existsSync(filePath)) {
+      archive.file(filePath, { name: file });
+    }
+  });
+
+  // Finalize the archive and send it to the response stream
+  archive.finalize();
+});
+
 // Redirect to HTTPS if not secure
 app.use((req, res, next) => {
   if (!req.secure) {
     return res.redirect(
-      `https://${req.headers.host.replace(/:[0-9]+/, "")}:${portHTTPS}${
-        req.url
+      `https://${req.headers.host.replace(/:[0-9]+/, "")}:${portHTTPS}${req.url
       }`
     );
   }
