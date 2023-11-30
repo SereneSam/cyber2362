@@ -77,6 +77,13 @@ app.post('/login', (req, res) => {
   });
 });
 
+app.post("/logout", (req, res) => {
+  // Perform any logout-related actions here (e.g., clearing session data)
+
+  // Redirect to the login page
+  res.redirect("/loginPage");
+});
+
 app.post('/filesPage', (req, res) => {
   const uploadedFile = req.files && req.files.file; // req.files && added
 
