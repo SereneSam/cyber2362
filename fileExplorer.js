@@ -1,7 +1,7 @@
-function showFileExplorer() {
+/*function showFileExplorer() {
   // Redirect to the file explorer page
   window.location.href = "/fileExplorer";
-}
+}*/
 
 // Display files
 document.addEventListener("DOMContentLoaded", () => {
