@@ -12,18 +12,28 @@
 </head>
 
 <body>
-    <!-- Button to go back to Upload Page -->
-    <button id="goToFilesPageButton" onclick="goToFilesPage()">Go Back</button>
-    <script src="fileExplorer.js"></script>
+    <!-- Confirm Delete Button here -->
+    <!-- <button id="deleteButton" onclick="confirmFileDeletion('example-file.txt')">Delete Selected Files</button>
+    <script src="confirmationDialog.js"></script> -->
+
+    <button id="deleteButton" onclick="deleteCheckedFiles()">Delete Selected Files</button>
+    <!-- <script src="confirmationDialog.js"></script> -->
+
+    <!-- Confirm Delete Button here-->
+    <!-- <form action="/deleteFile/" method="post">
+        <input type="text" placeholder="Type the file..." name="fileName">
+        <input type="submit" value="Delete">
+    </form> -->
+    <!-- <script src="confirmationDialog.js"></script> -->
 
     <!-- List of files with checkboxes -->
     <ul id="fileList">
         <!-- File list will be dynamically added here -->
     </ul>
 
-    <!-- Confirm Delete Button here-->
-    <button id="deleteButton" onclick="confirmFileDeletion('example-file.txt')">Delete Selected Files</button>
-    <script src="confirmationDialog.js"></script>
+    <!-- Button to go back to Upload Page -->
+    <button id="goToFilesPageButton" onclick="goToFilesPage()">Go Back</button>
+    <script src="fileExplorer.js"></script>
 </body>
 
 </html>

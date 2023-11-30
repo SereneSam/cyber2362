@@ -36,11 +36,58 @@ function displayFileList() {
         .catch(error => console.error('Error fetching files:', error));
 }
 
+function deleteCheckedFiles() {
+    const checkboxes = document.querySelectorAll('#fileList input[type="checkbox"]:checked');
+    // const checkboxes = document.querySelectorAll('.fileCheckbox');
+    const filesToDelete = Array.from(checkboxes)
+        .filter(checkbox => checkbox.checked)
+        .map(checkbox => checkbox.value);
+
+    console.log('Files to delete:', filesToDelete);
+
+    // Make a POST request to delete the files
+    fetch('/deleteFile/', {
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ files: filesToDelete }),
+    })
+        .then(response => response.json())
+        .then(data => {
+            console.log(data.message);
+            // Refresh the file list after deletion
+            location.reload();
+        })
+        .catch(error => console.error('Error deleting files:', error));
+}
+
+function confirmFileDeletion() {
+    const checkboxes = document.querySelectorAll('#fileList input[type="checkbox"]:checked');
+    const filesToDelete = Array.from(checkboxes).map(checkbox => checkbox.value);
+
+    if (filesToDelete.length > 0) {
+        // Display a confirmation dialog or directly delete files
+        deleteCheckedFiles();
+    } else {
+        // Provide feedback to the user (e.g., show an alert)
+        alert('No files selected for deletion.');
+    }
+}
+
 function goToFilesPage() {
     window.location.href = '/filesPage';
 }
 
-function confirmFileDeletion() {
-    toggleFileToDelete();
-    openConfirmationDialog();
+// function confirmFileDeletion() {
+//     toggleFileToDelete();
+//     openConfirmationDialog();
+// }
+
+function toggleFileToDelete() {
+    // const checkbox = document.querySelector(`.fileCheckbox[data-file-id="${fileId}"]`);
+
+    // if (checkbox) {
+    //     checkbox.checked = !checkbox.checked;
+    // }
 }

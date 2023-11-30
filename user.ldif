@@ -1,0 +1,10 @@
+dn: uid=jdoe,ou=people,dc=example,dc=com
+objectClass: top
+objectClass: person
+objectClass: organizationalPerson
+objectClass: inetOrgPerson
+uid: jdoe
+cn: John Doe
+sn: Doe
+givenName: John
+userPassword: {SHA}hashed_password  # Replace with the hashed password

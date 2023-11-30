@@ -58,6 +58,7 @@ body {
     margin-right: 10px;
 }
 
+
 /* Go to File Explorer button */
 #fileExplorerButton {
     margin-bottom: 20px;
@@ -141,7 +142,7 @@ body {
     cursor: pointer;
 }
 
-#goToFilesPage:hover {
+#goToFilesPageButton:hover {
     background-color: #053F5E;
     border: 2px solid #FFD700;
     color: #FFD700;
