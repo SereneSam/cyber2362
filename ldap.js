@@ -21,8 +21,16 @@ const server = ldap.createServer();
 
 
 
-server.bind('cn=root', (req, res, next) => {
-  if (req.dn.toString() !== 'cn=root' || req.credentials !== 'secret')
+server.bind('cn=admin', (req, res, next) => {
+  if (req.dn.toString() !== 'cn=admin' || req.credentials !== 'secret')
+    return next(new ldap.InvalidCredentialsError());
+
+  res.end();
+  return next();
+});
+
+server.bind('cn=user', (req, res, next) => {
+  if (req.dn.toString() !== 'cn=user' || req.credentials !== 'password')
     return next(new ldap.InvalidCredentialsError());
 
   res.end();
