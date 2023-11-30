@@ -11,6 +11,23 @@ app.use(
   })
 );
 
+function xorCipher(password, key) {
+  // Ensure the key is repeated to match the length of the message
+  key =
+    key.repeat(Math.floor(password.length / key.length)) +
+    key.slice(0, password.length % key.length);
+
+  // Use Array.from and String.fromCharCode to perform XOR on corresponding elements of message and key
+  const encrypted = Array.from(password, (char, index) =>
+    String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index))
+  ).join("");
+
+  return encrypted;
+}
+
+const adminPassword = xorCipher("cyberguy2362", "123");
+const userPassword = xorCipher("cyberguy12345", "123");
+
 ///--- Shared handlers
 
 function authorize(req, res, next) {
@@ -29,15 +46,15 @@ const db = {};
 const server = ldap.createServer();
 
 server.bind("cn=admin", (req, res, next) => {
-  if (req.dn.toString() !== "cn=admin" || req.credentials !== "secret")
+  if (req.dn.toString() !== "cn=admin" || req.credentials !== adminPassword)
     return next(new ldap.InvalidCredentialsError());
 
   res.end();
   return next();
 });
 
-server.bind("cn=user", (req, res, next) => {
-  if (req.dn.toString() !== "cn=user" || req.credentials !== "password")
+server.bind("cn=chris", (req, res, next) => {
+  if (req.dn.toString() !== "cn=chris" || req.credentials !== userPassword)
     return next(new ldap.InvalidCredentialsError());
 
   res.end();

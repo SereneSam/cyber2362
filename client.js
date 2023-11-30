@@ -26,6 +26,20 @@ const authenticate = (req, res, next) => {
   }
 };
 
+function xorCipher(password, key) {
+  // Ensure the key is repeated to match the length of the message
+  key =
+    key.repeat(Math.floor(password.length / key.length)) +
+    key.slice(0, password.length % key.length);
+
+  // Use Array.from and String.fromCharCode to perform XOR on corresponding elements of message and key
+  const encrypted = Array.from(password, (char, index) =>
+    String.fromCharCode(char.charCodeAt(0) ^ key.charCodeAt(index))
+  ).join("");
+
+  return encrypted;
+}
+
 app.use(
   session({
     secret: "12345",
@@ -78,6 +92,8 @@ app.get("/fileList", (req, res) => {
 app.post("/login", (req, res) => {
   const username = req.body.username;
   const password = req.body.password;
+  const password1 = xorCipher(password, "123");
+  console.log(password1);
 
   //LDAP connection setup
   const client = ldap.createClient({
@@ -85,7 +101,7 @@ app.post("/login", (req, res) => {
   });
 
   // LDAP bind to authenticate the user
-  client.bind(`cn=${username}`, password, (err) => {
+  client.bind(`cn=${username}`, password1, (err) => {
     if (err) {
       const errorMessage = `Authentication failed for user ${username}: ${err.message}`;
       logger.error(errorMessage);
