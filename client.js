@@ -39,12 +39,12 @@ app.get('/fileList', (req, res) => {
   const directoryPath = path.join(__dirname, 'uploaded_files');
 
   try {
-      // Read the files in the directory synchronously
-      const files = fs.readdirSync(directoryPath);
-      res.json(files);
+    // Read the files in the directory synchronously
+    const files = fs.readdirSync(directoryPath);
+    res.json(files);
   } catch (err) {
-      console.error('Error reading files:', err);
-      res.status(500).json({ error: 'Internal Server Error' });
+    console.error('Error reading files:', err);
+    res.status(500).json({ error: 'Internal Server Error' });
   }
 });
 
@@ -55,8 +55,8 @@ app.post('/login', (req, res) => {
 
   // LDAP connection setup
   const client = ldap.createClient({
-  url: ['ldap://127.0.0.1:13089', 'ldap://127.0.0.2:13089']
-});
+    url: ['ldap://127.0.0.1:13089', 'ldap://127.0.0.2:13089']
+  });
 
   // LDAP bind to authenticate the user
   client.bind(`cn=${username}`, password, (err) => {
@@ -78,7 +78,7 @@ app.post('/login', (req, res) => {
 });
 
 app.post('/filesPage', (req, res) => {
-  const uploadedFile = req.files.file;
+  const uploadedFile = req.files && req.files.file; // req.files && added
 
   if (!uploadedFile) {
     const missingMessage = `No file to commit :(`;
@@ -115,8 +115,17 @@ app.post('/filesPage', (req, res) => {
   });
 });
 
-app.post('/deleteFiles', (req, res) => {
+app.use(express.json());
+app.post('/deleteFile/', (req, res) => {
   const filesToDelete = req.body.files;
+
+  console.log('Entire request body:', req.body);
+  console.log('Files to delete:', filesToDelete);
+
+  if (!filesToDelete || !Array.isArray(filesToDelete)) {
+    console.error('Invalid or missing files to delete.');
+    return res.status(400).json({ error: 'Bad Request' });
+  }
 
   try {
     const directoryPath = path.join(__dirname, 'uploaded_files');
