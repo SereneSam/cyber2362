@@ -114,6 +114,34 @@ body {
 }
 
 /* Logout button */
+form {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    margin: 0;
+    padding: 0;
+    height: 100%;
+    width: 100%;
+}
+
+#logoutButton {
+    width: 100%;  /* Add this line */
+    margin-bottom: 20px;
+    background-color: #FFD700;
+    color: #053F5E;
+    padding: 10px;
+    font-size: 16px;
+    border: none;
+    border-radius: 5px;
+    cursor: pointer;
+}
+
+#logoutButton:hover {
+    background-color: #053F5E;
+    border: 2px solid #FFD700;
+    color: #FFD700;
+}
+
 .Button {
     background-color: #FFD700;
     color: #053F5E;
